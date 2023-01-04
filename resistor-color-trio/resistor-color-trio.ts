@@ -17,11 +17,7 @@ export function decodedResistorValue(colors: Color[]): string {
   const [c1, c2, c3] = colors;
   let val = (ColorValue[c1] * 10 + ColorValue[c2]) * (10 ** ColorValue[c3]);
 
-  let unit = 'ohms';
-  if (val > 1000) {
-    unit = 'kiloohms';
-    val /= 1000;
-  }
-
-  return `${val} ${unit}`;
+  return val > 1000
+    ? `${val/1000} kiloohms`
+    : `${val} ohms`;
 }
