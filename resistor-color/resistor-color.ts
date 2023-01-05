@@ -9,8 +9,10 @@ export const COLORS = [
   'violet',
   'grey',
   'white',
-];
+] as const;
 
-export const colorCode = (color: string): number => {
+type Color = typeof COLORS[number];
+
+export const colorCode = (color: Color): number => {
   return COLORS.indexOf(color);
 }
