@@ -1,6 +1,6 @@
-const earthSecondsPerYear = 31557600;
+const earthSecondsPerYear = 31_557_600;
 
-const planetEarthYears = {
+const planetYearRatios = {
   'mercury': 0.2408467,
   'venus':   0.61519726,
   'earth':   1.0,
@@ -11,11 +11,10 @@ const planetEarthYears = {
   'neptune': 164.79132,
 };
 
-type Planet = keyof typeof planetEarthYears;
+type Planet = keyof typeof planetYearRatios;
 
 export function age(planet: Planet, seconds: number): number {
-  const years = seconds / earthSecondsPerYear;
-  const result = years / planetEarthYears[planet];
+  const result = seconds / earthSecondsPerYear / planetYearRatios[planet];
   const rounded = Math.round(result * 100) / 100;
   return rounded;
 }
