@@ -14,16 +14,12 @@ export class Matrix {
   }
 
   protected parseValues(text: string): number[][] {
-    const vals: number[][] = [];
-
-    const lines = text.split('\n');
-    for (const line of lines) {
-      const chars = line.split(' ');
-      const row: number[] = chars.map(char => parseInt(char));
-      vals.push(row);
-    }
-
-    return vals;
+    return text
+      .split('\n')
+      .map(line => line
+        .split(' ')
+        .map(Number)
+      );
   }
 
   protected transpose<T>(arr: T[][]): T[][] {
