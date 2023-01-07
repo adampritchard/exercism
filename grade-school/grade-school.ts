@@ -4,7 +4,12 @@ export class GradeSchool {
   protected _roster: Roster = {};
 
   public roster(): Roster {
-    return structuredClone(this._roster);
+    const clone: Roster = {};
+    for (const [key, value] of Object.entries(this._roster)) {
+      clone[Number(key)] = [...value];
+    }
+
+    return clone;
   }
 
   public add(name: string, grade: number): void {
@@ -27,6 +32,6 @@ export class GradeSchool {
 
   public grade(n: number): string[] {
     const grade = this._roster[n] || [];
-    return structuredClone(grade);
+    return [...grade];
   }
 }
