@@ -7,10 +7,7 @@ export class Rational {
     this.numerator = numerator / gcd;
     this.denominator = denominator / gcd;
 
-    // TODO: does this need to be a hardcoded special case?
-    if (numerator === 0) this.denominator = 1;
-
-    if (denominator < 0) {
+    if (this.denominator < 0) {
       this.numerator *= -1;
       this.denominator *= -1;
     }
@@ -21,8 +18,7 @@ export class Rational {
     const b1 = this.denominator;
     const a2 = other.numerator;
     const b2 = other.denominator;
-
-    return new Rational(a1 * b2 + a2 * b1, b1 * b2).reduce();
+    return new Rational(a1 * b2 + a2 * b1, b1 * b2);
   }
 
   sub(other: Rational): Rational {
@@ -30,8 +26,7 @@ export class Rational {
     const b1 = this.denominator;
     const a2 = other.numerator;
     const b2 = other.denominator;
-
-    return new Rational(a1 * b2 - a2 * b1, b1 * b2).reduce();
+    return new Rational(a1 * b2 - a2 * b1, b1 * b2);
   }
 
   mul(other: Rational): Rational {
@@ -39,8 +34,7 @@ export class Rational {
     const b1 = this.denominator;
     const a2 = other.numerator;
     const b2 = other.denominator;
-
-    return new Rational(a1 * a2, b1 * b2).reduce();
+    return new Rational(a1 * a2, b1 * b2);
   }
 
   div(other: Rational): Rational {
@@ -48,8 +42,7 @@ export class Rational {
     const b1 = this.denominator;
     const a2 = other.numerator;
     const b2 = other.denominator;
-
-    return new Rational(a1 * b2, a2 * b1).reduce();
+    return new Rational(a1 * b2, a2 * b1);
   }
 
   abs(): Rational {
@@ -61,20 +54,18 @@ export class Rational {
   }
 
   expreal(n: number): number {
-    return Math.pow(n ** this.numerator, 1.0 / this.denominator);
+    return Math.pow(n, 1.0 / this.denominator) ** this.numerator;
   }
 
   reduce(): Rational {
-    // Rationals are already reduced. But we create and return a new one for consistency.
+    // Rationals are already reduced when constructed.
+    // But we create and return a new one for consistency.
     return new Rational(this.numerator, this.denominator);
   }
 }
 
 export function greatestCommonDenominator(a: number, b: number): number {
-  const min = Math.min(Math.abs(a), Math.abs(b));
-  for (let gcd = min; gcd > 0; gcd--) {
-    if (a % gcd === 0 && b % gcd === 0) return gcd;
-  }
-
-  return 1; 
+  return b !== 0
+    ? greatestCommonDenominator(b, a % b)
+    : a;
 }
