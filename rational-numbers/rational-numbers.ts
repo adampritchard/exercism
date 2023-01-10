@@ -1,37 +1,80 @@
 export class Rational {
-  constructor() {
-    throw new Error('Remove this statement and implement this function')
+  public numerator: number;
+  public denominator: number;
+
+  constructor(numerator: number, denominator: number) {
+    const gcd = greatestCommonDenominator(numerator, denominator);
+    this.numerator = numerator / gcd;
+    this.denominator = denominator / gcd;
+
+    // TODO: does this need to be a hardcoded special case?
+    if (numerator === 0) this.denominator = 1;
+
+    if (denominator < 0) {
+      this.numerator *= -1;
+      this.denominator *= -1;
+    }
   }
 
-  add() {
-    throw new Error('Remove this statement and implement this function')
+  add(other: Rational): Rational {
+    const a1 = this.numerator;
+    const b1 = this.denominator;
+    const a2 = other.numerator;
+    const b2 = other.denominator;
+
+    return new Rational(a1 * b2 + a2 * b1, b1 * b2).reduce();
   }
 
-  sub() {
-    throw new Error('Remove this statement and implement this function')
+  sub(other: Rational): Rational {
+    const a1 = this.numerator;
+    const b1 = this.denominator;
+    const a2 = other.numerator;
+    const b2 = other.denominator;
+
+    return new Rational(a1 * b2 - a2 * b1, b1 * b2).reduce();
   }
 
-  mul() {
-    throw new Error('Remove this statement and implement this function')
+  mul(other: Rational): Rational {
+    const a1 = this.numerator;
+    const b1 = this.denominator;
+    const a2 = other.numerator;
+    const b2 = other.denominator;
+
+    return new Rational(a1 * a2, b1 * b2).reduce();
   }
 
-  div() {
-    throw new Error('Remove this statement and implement this function')
+  div(other: Rational): Rational {
+    const a1 = this.numerator;
+    const b1 = this.denominator;
+    const a2 = other.numerator;
+    const b2 = other.denominator;
+
+    return new Rational(a1 * b2, a2 * b1).reduce();
   }
 
-  abs() {
-    throw new Error('Remove this statement and implement this function')
+  abs(): Rational {
+    return new Rational(Math.abs(this.numerator), Math.abs(this.denominator));
   }
 
-  exprational() {
-    throw new Error('Remove this statement and implement this function')
+  exprational(n: number): Rational {
+    return new Rational(this.numerator ** n, this.denominator ** n);
   }
 
-  expreal() {
-    throw new Error('Remove this statement and implement this function')
+  expreal(n: number): number {
+    return Math.pow(n ** this.numerator, 1.0 / this.denominator);
   }
 
-  reduce() {
-    throw new Error('Remove this statement and implement this function')
+  reduce(): Rational {
+    // Rationals are already reduced. But we create and return a new one for consistency.
+    return new Rational(this.numerator, this.denominator);
   }
+}
+
+export function greatestCommonDenominator(a: number, b: number): number {
+  const min = Math.min(Math.abs(a), Math.abs(b));
+  for (let gcd = min; gcd > 0; gcd--) {
+    if (a % gcd === 0 && b % gcd === 0) return gcd;
+  }
+
+  return 1; 
 }
