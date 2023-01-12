@@ -9,25 +9,22 @@ export class SimpleCipher {
   }
 
   public encode(plainText: string): string {
-    const plainChars = plainText.split('');
-
-    const cipherChars = plainChars.map((char, index) => {
-      const offset = this.getOffset(index);
-      return this.offsetChar(char, offset);
-    });
-
-    return cipherChars.join('');
+    return this.shift(plainText, 'right');
   }
 
   public decode(cipherText: string): string {
-    const cipherChars = cipherText.split('');
+    return this.shift(cipherText, 'left');
+  }
 
-    const plainChars = cipherChars.map((char, index) => {
+  protected shift(text: string, dir: 'left'|'right'): string {
+    const offsetDir = dir === 'left' ? -1 : 1;
+
+    const shifted = text.split('').map((char, index) => {
       const offset = this.getOffset(index);
-      return this.offsetChar(char, -offset);
+      return this.offsetChar(char, offsetDir * offset);
     });
 
-    return plainChars.join('');
+    return shifted.join('');
   }
 
   protected getOffset(index: number): number {
@@ -47,7 +44,7 @@ export class SimpleCipher {
   }
 
   protected randomKey(): string {
-    return new Array(100).fill(undefined).map(_ => this.randomChar()).join('');
+    return Array.from({ length: 100 }, this.randomChar).join('');
   }
 
   protected randomChar(): string {
