@@ -1,5 +1,11 @@
 export class Gigasecond {
-  public date(/* Parameters go here */) {
-    throw new Error('Remove this statement and implement this function')
+  protected milliseconds: number;
+
+  constructor(date: Date) {
+    this.milliseconds = date.getTime();
+  }
+
+  public date(): Date {
+    return new Date(this.milliseconds + 1_000_000_000 * 1000);
   }
 }
