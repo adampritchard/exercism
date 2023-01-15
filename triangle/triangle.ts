@@ -1,17 +1,33 @@
 export class Triangle {
-  constructor(...sides) {
-    throw new Error('Remove this statement and implement this function')
+  public sides: number[];
+
+  constructor(...sides: number[]) {
+    this.sides = sides;
   }
 
-  get isEquilateral() {
-    throw new Error('Remove this statement and implement this function')
+  get isEquilateral(): boolean {
+    const [s1, s2, s3] = this.sides;
+    return this.isValid && (s1 === s2 && s2 === s3);
   }
 
-  get isIsosceles() {
-    throw new Error('Remove this statement and implement this function')
+  get isIsosceles(): boolean {
+    const [s1, s2, s3] = this.sides;
+    return this.isValid && (s1 === s2 || s2 === s3 || s3 === s1);
   }
 
-  get isScalene() {
-    throw new Error('Remove this statement and implement this function')
+  get isScalene(): boolean {
+    const [s1, s2, s3] = this.sides;
+    return this.isValid && (s1 !== s2 && s2 !== s3);
+  }
+
+  get isValid(): boolean {
+    const [s1, s2, s3] = this.sides;
+    return this.isValidSide(s1, s2, s3)
+        && this.isValidSide(s2, s1, s3)
+        && this.isValidSide(s3, s1, s2);
+  }
+
+  protected isValidSide(side: number, other1: number, other2: number) {
+    return side > 0 && other1 + other2 >= side;
   }
 }
