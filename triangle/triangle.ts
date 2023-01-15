@@ -22,12 +22,8 @@ export class Triangle {
 
   get isValid(): boolean {
     const [s1, s2, s3] = this.sides;
-    return this.isValidSide(s1, s2, s3)
-        && this.isValidSide(s2, s1, s3)
-        && this.isValidSide(s3, s1, s2);
-  }
-
-  protected isValidSide(side: number, other1: number, other2: number) {
-    return side > 0 && other1 + other2 >= side;
+    return s1 + s2 > s3
+        && s2 + s3 > s1
+        && s3 + s1 > s2;
   }
 }
