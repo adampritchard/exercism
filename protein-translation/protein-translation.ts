@@ -1,3 +1,13 @@
+const proteinMap: Record<string, string[]> = {
+  Methionine:    ['AUG'],
+  Phenylalanine: ['UUU', 'UUC'],
+  Leucine:       ['UUA', 'UUG'],
+  Serine:        ['UCU', 'UCC', 'UCA', 'UCG'],
+  Tyrosine:      ['UAU', 'UAC'],
+  Cysteine:      ['UGU', 'UGC'],
+  Tryptophan:    ['UGG'],
+  STOP:          ['UAA', 'UAG', 'UGA'],
+};
 
 export function translate(rna: string): string[] {
   const proteins: string[] = [];
@@ -5,7 +15,7 @@ export function translate(rna: string): string[] {
   const codons = rna.match(/\w\w\w/g) ?? [];
   for (const codon of codons) {
     const protein = getProtein(codon);
-    if (protein) {
+    if (protein !== 'STOP') {
       proteins.push(protein);
     } else {
       break;
@@ -15,23 +25,10 @@ export function translate(rna: string): string[] {
   return proteins;
 }
 
-function getProtein(codon: string): string|null {
-  if (['AUG'].includes(codon)) return 'Methionine';
+function getProtein(codon: string): string {
+  for (const [protein, codons] of Object.entries(proteinMap)) {
+    if (codons.includes(codon)) return protein;
+  }
 
-  if (['UUU', 'UUC'].includes(codon)) return 'Phenylalanine';
-
-  if (['UUA', 'UUG'].includes(codon)) return 'Leucine';
-
-  if (['UCU', 'UCC', 'UCA', 'UCG'].includes(codon)) return 'Serine';
-
-  if (['UAU', 'UAC'].includes(codon)) return 'Tyrosine';
-
-  if (['UGU', 'UGC'].includes(codon)) return 'Cysteine';
-
-  if (['UGG'].includes(codon)) return 'Tryptophan';
-
-  // 'Stop' codons.
-  if (['UAA', 'UAG', 'UGA'].includes(codon)) return null;
-
-  return null;
+  throw new Error(`Unknown codon: '${codon}'`);
 }
