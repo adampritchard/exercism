@@ -18,7 +18,7 @@ function aliquotSum(n: number): number {
 function factors(n: number): number[] {
   const results = [];
 
-  for (let i = n - 1; i > 0; i -= 1) {
+  for (let i = Math.floor(n / 2); i > 0; i -= 1) {
     if (n % i === 0) results.push(i);
   }
 
