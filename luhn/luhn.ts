@@ -10,7 +10,7 @@ export function valid(digitString: string): boolean {
   // Starting from the right, double every 2nd digit.
   // if the doubled digit is greater than 9, subtract 9.
   for (let i = digits.length - 2; i >= 0; i -= 2) {
-    let n = Number(digits[i]) * 2;
+    let n = digits[i] * 2;
     digits[i] = (n > 9) ? n - 9 : n;
   }
 
