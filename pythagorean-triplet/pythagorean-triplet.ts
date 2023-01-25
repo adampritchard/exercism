@@ -7,19 +7,15 @@ type Options = {
 export function triplets({ sum, minFactor, maxFactor }: Options): Triplet[] {
   const results = [];
 
-  for (let c = sum - 1; c >= 0; c -= 1) {
-    for (let b = c - 1; b >= 0; b -= 1) {
-      for (let a = b - 1; a >= 0; a -= 1) {
-        const isPythagoreanTriplet = a**2 + b**2 === c**2;
-        if (isPythagoreanTriplet) {
-          const satisfiesSum = a + b + c === sum;
-          const satisfiesMinFactor = minFactor === undefined || a > minFactor;
-          const satisfiesMaxFactor = maxFactor === undefined || c < maxFactor;
+  const max = maxFactor || sum / 2;
+  const min = minFactor || 1;
 
-          if (satisfiesSum && satisfiesMinFactor && satisfiesMaxFactor) {
-            results.push(new Triplet(a, b, c));
-          }
-        }
+  for (let a = min; a < max; a += 1) {
+    for (let b = a + 1; b < max; b += 1) {
+      const c = sum - a - b;
+      
+      if (c < max && a**2 + b**2 === c**2) {
+        results.push(new Triplet(a, b, c));
       }
     }
   }
