@@ -1,9 +1,28 @@
 export class Anagram {
-  constructor(input: unknown) {
-    throw new Error('Remove this statement and implement this function')
+  constructor(
+    public input: string,
+  ) {}
+
+  public matches(...potentials: string[]): string[] {
+    const inputLetters = this.getLetterCounts(this.input);
+
+    return potentials.filter(word => {
+      if (this.input.length !== word.length) return false;
+      if (this.input.toLowerCase() === word.toLowerCase()) return false;
+
+      return Object
+        .entries(this.getLetterCounts(word))
+        .every(([letter, count]) => inputLetters[letter] === count);
+    });
   }
 
-  public matches(...potentials: unknown[]): unknown {
-    throw new Error('Remove this statement and implement this function')
+  protected getLetterCounts(word: string): Record<string, number> {
+    const counts: Record<string, number> = {};
+
+    for (const char of word.toLowerCase()) {
+      counts[char] = 1 + (counts[char] || 0);
+    }
+
+    return counts;
   }
 }
