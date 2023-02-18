@@ -18,10 +18,13 @@ export function encode(values: number[]): number[] {
 }
 
 export function decode(bytes: number[]): number[] {
+  if ((bytes[bytes.length - 1] & 0b1000_0000) !== 0) {
+    throw new Error('Incomplete sequence');
+  }
+
   const decoded: number[] = [];
 
   let value = 0;
-  let complete = true;
   for (const byte of bytes) {
     value <<= 7;
 
@@ -29,15 +32,9 @@ export function decode(bytes: number[]): number[] {
       value |= byte;
       decoded.push(value >>> 0);
       value = 0;
-      complete = true;
     } else {
       value |= (byte & 0b0111_1111);
-      complete = false;
     }
-  }
-
-  if (!complete) {
-    throw new Error('Incomplete sequence');
   }
 
   return decoded;
