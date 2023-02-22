@@ -3,13 +3,13 @@
 
 bool is_armstrong_number(int candidate)
 {
-    int exp = log10(candidate) + 1;
+    int digit_count = log10(candidate) + 1;
 
     int digits = candidate;
     int sum = 0;
     while (digits > 0) {
         int digit = digits % 10;
-        sum += (int)pow(digit, exp);
+        sum += (int)pow(digit, digit_count);
         digits /= 10;
     }
 
