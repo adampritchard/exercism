@@ -1,20 +1,9 @@
 #include <math.h>
 #include "armstrong_numbers.h"
 
-static int number_of_digits(int n) {
-    int count = 0;
-
-    do {
-        count += 1;
-        n /= 10;
-    } while (n > 0);
-
-    return count;
-}
-
 bool is_armstrong_number(int candidate)
 {
-    int exp = number_of_digits(candidate);
+    int exp = log10(candidate) + 1;
 
     int digits = candidate;
     int sum = 0;
