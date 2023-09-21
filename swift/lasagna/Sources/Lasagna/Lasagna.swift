@@ -9,6 +9,5 @@ func preparationTimeInMinutes(layers: Int) -> Int {
 }
 
 func totalTimeInMinutes(layers: Int, elapsedMinutes: Int) -> Int {
-  return preparationTimeInMinutes(layers: layers)
-       + remainingMinutesInOven(elapsedMinutes: elapsedMinutes)
+  return preparationTimeInMinutes(layers: layers) + elapsedMinutes
 }
