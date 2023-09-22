@@ -1,7 +1,16 @@
 func protectSecret(_ secret: String, withPassword password: String) -> (String) -> String {
-  fatalError("Please implement the protectSecret(_:withPassword:) function")
+  func fn(_ pwAttempt: String) -> String {
+    pwAttempt == password
+      ? secret
+      : "Sorry. No hidden secrets here."
+  }
+
+  return fn
 }
 
 func generateCombination(forRoom room: Int, usingFunction f: (Int) -> Int) -> (Int, Int, Int) {
-  fatalError("Please implement the generateCombination(forRoom:usingFunction) function")
+  let n1 = f(room)
+  let n2 = f(n1)
+  let n3 = f(n2)
+  return (n1, n2, n3)
 }
