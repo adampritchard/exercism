@@ -25,11 +25,7 @@ func removeCard(at index: Int, from stack: [Int]) -> [Int] {
 }
 
 func removeTopCard(_ stack: [Int]) -> [Int] {
-  var newStack = stack
-  if newStack.count > 0 {
-    newStack.remove(at: newStack.count - 1)
-  }
-  return newStack
+  stack.dropLast()
 }
 
 func insert(_ newCard: Int, atBottomOf stack: [Int]) -> [Int] {
@@ -39,9 +35,7 @@ func insert(_ newCard: Int, atBottomOf stack: [Int]) -> [Int] {
 }
 
 func removeBottomCard(_ stack: [Int]) -> [Int] {
-  var newStack = stack
-  newStack.remove(at: 0)
-  return newStack
+  Array(stack.dropFirst())
 }
 
 func checkSizeOfStack(_ stack: [Int], _ size: Int) -> Bool {
