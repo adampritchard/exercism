@@ -5,7 +5,7 @@ func sliceSize(diameter: Double?, slices: Int?) -> Double? {
     return nil
   }
 
-  guard slices > 0 && diameter >= 0 else {
+  guard slices > 0, diameter >= 0 else {
     return nil
   }
 
@@ -32,9 +32,7 @@ func biggestSlice(
     return "Slice A is bigger"
   }
 
-  if sizeA > sizeB {
-    return "Slice A is bigger"
-  } else {
-    return "Slice B is bigger"
-  }
+  return sizeA > sizeB
+    ? "Slice A is bigger"
+    : "Slice B is bigger"
 }
