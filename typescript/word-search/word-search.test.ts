@@ -8,14 +8,14 @@ describe('single line grids', () => {
     expect(wordSearch instanceof WordSearch).toEqual(true)
   })
 
-  xit('should accept a target search word', () => {
+  it('should accept a target search word', () => {
     const grid = ['jefblpepre']
     const wordSearch = new WordSearch(grid)
 
     expect(wordSearch.find(['glasnost'])).toEqual({ glasnost: undefined })
   })
 
-  xit('should locate a word written left to right', () => {
+  it('should locate a word written left to right', () => {
     const grid = ['clojurermt']
     const expectedResults = {
       clojure: {
@@ -28,7 +28,7 @@ describe('single line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate the same word written left to right in a different position', () => {
+  it('should locate the same word written left to right in a different position', () => {
     const grid = ['mtclojurer']
     const expectedResults = {
       clojure: {
@@ -41,7 +41,7 @@ describe('single line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a different left to right word', () => {
+  it('should locate a different left to right word', () => {
     const grid = ['coffeelplx']
     const expectedResults = {
       coffee: {
@@ -54,7 +54,7 @@ describe('single line grids', () => {
     expect(wordSearch.find(['coffee'])).toEqual(expectedResults)
   })
 
-  xit('should locate that different left to right word in a different position', () => {
+  it('should locate that different left to right word in a different position', () => {
     const grid = ['xcoffeezlp']
     const expectedResults = {
       coffee: {
@@ -69,7 +69,7 @@ describe('single line grids', () => {
 })
 
 describe('multi line grids', () => {
-  xit('should locate a left to right word in a two line grid', () => {
+  it('should locate a left to right word in a two line grid', () => {
     const grid = ['jefblpepre', 'clojurermt']
 
     const expectedResults = {
@@ -84,7 +84,7 @@ describe('multi line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a left to right word in a different position in a two line grid', () => {
+  it('should locate a left to right word in a different position in a two line grid', () => {
     const grid = ['jefblpepre', 'tclojurerm']
     const expectedResults = {
       clojure: {
@@ -97,7 +97,7 @@ describe('multi line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a left to right word in a three line grid', () => {
+  it('should locate a left to right word in a three line grid', () => {
     const grid = ['camdcimgtc', 'jefblpepre', 'clojurermt']
     const expectedResults = {
       clojure: {
@@ -110,7 +110,7 @@ describe('multi line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a left to right word in a ten line grid', () => {
+  it('should locate a left to right word in a ten line grid', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -135,7 +135,7 @@ describe('multi line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a left to right word in a different position in a ten line grid', () => {
+  it('should locate a left to right word in a different position in a ten line grid', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -160,7 +160,7 @@ describe('multi line grids', () => {
     expect(wordSearch.find(['clojure'])).toEqual(expectedResults)
   })
 
-  xit('should locate a different left to right word in a ten line grid', () => {
+  it('should locate a different left to right word in a ten line grid', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -186,7 +186,7 @@ describe('multi line grids', () => {
 })
 
 describe('multiple words', () => {
-  xit('should locate two words written left to right', () => {
+  it('should locate two words written left to right', () => {
     const grid = [
       'aefblpepre',
       'camdcimgtc',
@@ -217,7 +217,7 @@ describe('multiple words', () => {
 })
 
 describe('different directions', () => {
-  xit('should locate a single word written right to left', () => {
+  it('should locate a single word written right to left', () => {
     const grid = ['rixilelhrs']
     const expectedResults = {
       elixir: {
@@ -230,7 +230,7 @@ describe('different directions', () => {
     expect(wordSearch.find(['elixir'])).toEqual(expectedResults)
   })
 
-  xit('should locate multiple words written in different horizontal directions', () => {
+  it('should locate multiple words written in different horizontal directions', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -260,7 +260,7 @@ describe('different directions', () => {
 })
 
 describe('vertical directions', () => {
-  xit('should locate words written top to bottom', () => {
+  it('should locate words written top to bottom', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -293,7 +293,7 @@ describe('vertical directions', () => {
     )
   })
 
-  xit('should locate words written bottom to top', () => {
+  it('should locate words written bottom to top', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -331,7 +331,7 @@ describe('vertical directions', () => {
     ).toEqual(expectedResults)
   })
 
-  xit('should locate words written top left to bottom right', () => {
+  it('should locate words written top left to bottom right', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
