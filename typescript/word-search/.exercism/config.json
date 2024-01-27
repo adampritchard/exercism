@@ -1,0 +1,21 @@
+{
+  "authors": [
+    "msomji"
+  ],
+  "contributors": [
+    "ErikSchierboom",
+    "SleeplessByte"
+  ],
+  "files": {
+    "solution": [
+      "word-search.ts"
+    ],
+    "test": [
+      "word-search.test.ts"
+    ],
+    "example": [
+      ".meta/proof.ci.ts"
+    ]
+  },
+  "blurb": "Create a program to solve a word search puzzle."
+}
