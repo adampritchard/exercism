@@ -5,6 +5,17 @@ type FoundWord = {
 
 type FoundWords = Record<string, FoundWord|undefined>;
 
+const directions = [
+  [ 1,  0], // ➡️
+  [-1,  0], // ⬅️
+  [ 0,  1], // ⬇️
+  [ 0, -1], // ⬆️
+  [ 1,  1], // ↘️
+  [-1, -1], // ↖️
+  [ 1, -1], // ↗️
+  [-1,  1], // ↙️
+];
+
 export class WordSearch {
   protected grid: string[][];
 
@@ -25,43 +36,10 @@ export class WordSearch {
   protected findWord(word: string): FoundWord|undefined {
     for (let y = 0; y < this.grid.length; y += 1) {
       for (let x = 0; x < this.grid[0].length; x += 1) {
-        let found: FoundWord|undefined = undefined;
-
-        const x2 = x + (word.length - 1);
-        const y2 = y + (word.length - 1);
-        const y3 = y - (word.length - 1);
-
-        // left to right.
-        found = this.findWordAtCoords(x, y, x2, y, word);
-        if (found) return found;
-
-        // right to left.
-        found = this.findWordAtCoords(x2, y, x, y, word);
-        if (found) return found;
-
-        // top to bottom.
-        found = this.findWordAtCoords(x, y, x, y2, word);
-        if (found) return found;
-
-        // bottom to top.
-        found = this.findWordAtCoords(x, y2, x, y, word);
-        if (found) return found;
-
-        // top left to bottom right.
-        found = this.findWordAtCoords(x, y, x2, y2, word);
-        if (found) return found;
-
-        // bottom right to top left.
-        found = this.findWordAtCoords(x2, y2, x, y, word);
-        if (found) return found;
-
-        // bottom left to top right.
-        found = this.findWordAtCoords(x, y, x2, y3, word);
-        if (found) return found;
-
-        // top right to bottom left.
-        found = this.findWordAtCoords(x2, y3, x, y, word);
-        if (found) return found;
+        for (const [dx, dy] of directions) {
+          const found = this.findWordAtCoord(word, x, y, dx, dy);
+          if (found) return found;
+        }
       }
     }
 
@@ -69,29 +47,26 @@ export class WordSearch {
     return undefined;
   }
 
-  protected findWordAtCoords(x1: number, y1: number, x2: number, y2: number, word: string): FoundWord|undefined {
-    if (!this.isInBounds(x1, y1) || !this.isInBounds(x2, y2)) {
+  protected findWordAtCoord(word: string, x: number, y: number, dx: number, dy: number): FoundWord|undefined {
+    const x2 = x + (dx * (word.length - 1));
+    const y2 = y + (dy * (word.length - 1));
+
+    if (!this.isInBounds(x2, y2)) {
       return undefined;
     }
 
-    const getIndex = (min: number, max: number, i: number) => {
-      if (max === min) return min;
-      if (max > min) return min + i;
-      return min - i;
-    };
-
     // check for any chars that don't match.
     for (let i = 0; i < word.length; i += 1) {
-      const x = getIndex(x1, x2, i);
-      const y = getIndex(y1, y2, i);
+      const ix = x + (i * dx);
+      const iy = y + (i * dy);
 
-      if (this.grid[y][x] !== word.charAt(i)) {
+      if (this.grid[iy][ix] !== word.charAt(i)) {
         return undefined;
       }
     }
 
     return {
-      start: [y1 + 1, x1 + 1],
+      start: [y  + 1, x  + 1],
       end:   [y2 + 1, x2 + 1],
     };
   }
