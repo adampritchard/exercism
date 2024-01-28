@@ -1,44 +1,46 @@
+type Direction = 'right' | 'down' | 'left' | 'up';
+
 export function ofSize(n: number): number[][] {
-  const spiral: number[][] = [];
+  const spiral: number[][] = Array(n);
   for (let i = 0; i < n; i += 1) {
-    spiral[i] = new Array(n);
+    spiral[i] = Array(n).fill(0);
   }
 
-  let x1 = 0;
-  let x2 = n - 1;
-  let y1 = 0;
-  let y2 = n - 1;
-
   let val = 1;
+  let x = 0;
+  let y = 0;
+  let dir: Direction = 'right';
   while (val <= n * n) {
-    // top row
-    for (let i = x1; i <= x2; i += 1) {
-      spiral[y1][i] = val;
-      val += 1;
-    }
-    y1 += 1;
+    spiral[y][x] = val;
+    val += 1;
 
-    // right col
-    for (let i = y1; i <= y2; i += 1) {
-      spiral[i][x2] = val;
-      val += 1;
+    const [nx, ny] = nextCoord(x, y, dir);
+    if (spiral[ny] && spiral[ny][nx] === 0) {
+      x = nx;
+      y = ny;
+    } else {
+      dir = nextDirection(dir);
+      [x, y] = nextCoord(x, y, dir);
     }
-    x2 -= 1;
-
-    // bottom row
-    for (let i = x2; i >= x1; i -= 1) {
-      spiral[y2][i] = val;
-      val += 1;
-    }
-    y2 -= 1;
-
-    // left col
-    for (let i = y2; i >= y1; i -= 1) {
-      spiral[i][x1] = val;
-      val += 1;
-    }
-    x1 += 1;
-  }  
+  }
 
   return spiral;
+}
+
+function nextDirection(d: Direction): Direction {
+  switch (d) {
+    case 'right': return 'down';
+    case 'down':  return 'left';
+    case 'left':  return 'up';
+    case 'up':    return 'right';
+  }
+}
+
+function nextCoord(x: number, y: number, d: Direction): [number, number] {
+  switch (d) {
+    case 'right': return [x + 1, y    ];
+    case 'down':  return [x    , y + 1];
+    case 'left':  return [x - 1, y    ];
+    case 'up':    return [x    , y - 1];
+  }
 }
