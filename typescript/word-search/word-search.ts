@@ -23,66 +23,45 @@ export class WordSearch {
   }
 
   protected findWord(word: string): FoundWord|undefined {
-    const backwardsWord = Array.from(word).reverse().join('');
-
     for (let y = 0; y < this.grid.length; y += 1) {
       for (let x = 0; x < this.grid[0].length; x += 1) {
+        let found: FoundWord|undefined = undefined;
 
-        if (this.findWordLeftToRight(x, y, word)) {
-          return {
-            start: [y + 1, x + 1],
-            end:   [y + 1, x + word.length],
-          };
-        }
+        const x2 = x + (word.length - 1);
+        const y2 = y + (word.length - 1);
+        const y3 = y - (word.length - 1);
 
-        if (this.findWordLeftToRight(x, y, backwardsWord)) {
-          return {
-            start: [y + 1, x + word.length],
-            end:   [y + 1, x + 1],
-          };
-        }
+        // left to right.
+        found = this.findWordAtCoords(x, y, x2, y, word);
+        if (found) return found;
 
-        if (this.findWordTopToBottom(x, y, word)) {
-          return {
-            start: [y + 1, x + 1],
-            end: [y + word.length, x + 1],
-          };
-        }
+        // right to left.
+        found = this.findWordAtCoords(x2, y, x, y, word);
+        if (found) return found;
 
-        if (this.findWordTopToBottom(x, y, backwardsWord)) {
-          return {
-            start: [y + word.length, x + 1],
-            end: [y + 1, x + 1],
-          };
-        }
+        // top to bottom.
+        found = this.findWordAtCoords(x, y, x, y2, word);
+        if (found) return found;
 
-        if (this.findWordTopLeftToBottomRight(x, y, word)) {
-          return {
-            start: [y + 1, x + 1],
-            end: [y + word.length, x + word.length],
-          };
-        }
+        // bottom to top.
+        found = this.findWordAtCoords(x, y2, x, y, word);
+        if (found) return found;
 
-        if (this.findWordTopLeftToBottomRight(x, y, backwardsWord)) {
-          return {
-            start: [y + word.length, x + word.length],
-            end: [y + 1, x + 1],
-          };
-        }
+        // top left to bottom right.
+        found = this.findWordAtCoords(x, y, x2, y2, word);
+        if (found) return found;
 
-        if (this.findWordBottomLeftToTopRight(x, y, word)) {
-          return {
-            start: [y + 1, x + 1],
-            end: [y + 1 - (word.length - 1), x + word.length],
-          };
-        }
+        // bottom right to top left.
+        found = this.findWordAtCoords(x2, y2, x, y, word);
+        if (found) return found;
 
-        if (this.findWordBottomLeftToTopRight(x, y, backwardsWord)) {
-          return {
-            start: [y + 1 - (word.length - 1), x + word.length],
-            end: [y + 1, x + 1],
-          };
-        }
+        // bottom left to top right.
+        found = this.findWordAtCoords(x, y, x2, y3, word);
+        if (found) return found;
+
+        // top right to bottom left.
+        found = this.findWordAtCoords(x2, y3, x, y, word);
+        if (found) return found;
       }
     }
 
@@ -90,33 +69,9 @@ export class WordSearch {
     return undefined;
   }
 
-  protected findWordLeftToRight(x: number, y: number, word: string): boolean {
-    const x2 = x + word.length - 1;
-    const y2 = y;
-    return this.findWordAtCoords(x, y, x2, y2, word);
-  }
-
-  protected findWordTopToBottom(x: number, y: number, word: string): boolean {
-    const x2 = x;
-    const y2 = y + word.length - 1;
-    return this.findWordAtCoords(x, y, x2, y2, word);
-  }
-
-  protected findWordTopLeftToBottomRight(x: number, y: number, word: string): boolean {
-    const x2 = x + word.length - 1;
-    const y2 = y + word.length - 1;
-    return this.findWordAtCoords(x, y, x2, y2, word);
-  }
-
-  protected findWordBottomLeftToTopRight(x: number, y: number, word: string): boolean {
-    const x2 = x + word.length - 1;
-    const y2 = y - word.length - 1;
-    return this.findWordAtCoords(x, y, x2, y2, word);
-  }
-
-  protected findWordAtCoords(x1: number, y1: number, x2: number, y2: number, word: string): boolean {
+  protected findWordAtCoords(x1: number, y1: number, x2: number, y2: number, word: string): FoundWord|undefined {
     if (!this.isInBounds(x1, y1) || !this.isInBounds(x2, y2)) {
-      return false;
+      return undefined;
     }
 
     const getIndex = (min: number, max: number, i: number) => {
@@ -131,11 +86,14 @@ export class WordSearch {
       const y = getIndex(y1, y2, i);
 
       if (this.grid[y][x] !== word.charAt(i)) {
-        return false;
+        return undefined;
       }
     }
 
-    return true;
+    return {
+      start: [y1 + 1, x1 + 1],
+      end:   [y2 + 1, x2 + 1],
+    };
   }
 
   protected isInBounds(x: number, y: number): boolean {
