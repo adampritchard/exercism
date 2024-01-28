@@ -6,19 +6,10 @@ type FoundWord = {
 type FoundWords = Record<string, FoundWord|undefined>;
 
 export class WordSearch {
-  protected rows: string[];
-  protected cols: string[];
+  protected grid: string[][];
 
   constructor(grid: string[]) {
-    this.rows = grid;
-
-    // Transpose rows into cols.
-    this.cols = Array.from({ length: this.rows[0].length }, () => '');
-    for (const row of this.rows) {
-      for (let x = 0; x < row.length; x += 1) {
-        this.cols[x] += row.charAt(x);
-      }
-    }
+    this.grid = grid.map(row => Array.from(row));
   }
 
   public find(words: string[]): FoundWords {
@@ -34,67 +25,62 @@ export class WordSearch {
   protected findWord(word: string): FoundWord|undefined {
     const backwardsWord = Array.from(word).reverse().join('');
 
-    // check each row.
-    for (let y = 1; y <= this.rows.length; y += 1) {
-      const row = this.rows[y - 1];
+    for (let y = 0; y < this.grid.length; y += 1) {
+      for (let x = 0; x < this.grid[0].length; x += 1) {
 
-      // check from left to right.
-      {
-        const index = row.indexOf(word);
-        if (index !== -1) {
-          const x1 = index + 1;
-          const x2 = index + word.length;
-
+        if (this.findWordLeftToRight(x, y, word)) {
           return {
-            start: [y, x1],
-            end: [y, x2],
+            start: [y + 1, x + 1],
+            end:   [y + 1, x + word.length],
           };
         }
-      }
 
-      // check from right to left.
-      {
-        const index = row.indexOf(backwardsWord);
-        if (index !== -1) {
-          const x1 = index + word.length;
-          const x2 = index + 1;
-
+        if (this.findWordLeftToRight(x, y, backwardsWord)) {
           return {
-            start: [y, x1],
-            end: [y, x2],
+            start: [y + 1, x + word.length],
+            end:   [y + 1, x + 1],
           };
         }
-      }
-    }
 
-    // check each col.
-    for (let x = 1; x <= this.rows.length; x += 1) {
-      const col = this.cols[x - 1];
-
-      // check from top to bottom.
-      {
-        const index = col.indexOf(word);
-        if (index !== -1) {
-          const y1 = index + 1;
-          const y2 = index + word.length;
-
+        if (this.findWordTopToBottom(x, y, word)) {
           return {
-            start: [y1, x],
-            end: [y2, x],
+            start: [y + 1, x + 1],
+            end: [y + word.length, x + 1],
           };
         }
-      }
 
-      // check from bottom to top.
-      {
-        const index = col.indexOf(backwardsWord);
-        if (index !== -1) {
-          const y1 = index + word.length;
-          const y2 = index + 1;
-
+        if (this.findWordTopToBottom(x, y, backwardsWord)) {
           return {
-            start: [y1, x],
-            end: [y2, x],
+            start: [y + word.length, x + 1],
+            end: [y + 1, x + 1],
+          };
+        }
+
+        if (this.findWordTopLeftToBottomRight(x, y, word)) {
+          return {
+            start: [y + 1, x + 1],
+            end: [y + word.length, x + word.length],
+          };
+        }
+
+        if (this.findWordTopLeftToBottomRight(x, y, backwardsWord)) {
+          return {
+            start: [y + word.length, x + word.length],
+            end: [y + 1, x + 1],
+          };
+        }
+
+        if (this.findWordBottomLeftToTopRight(x, y, word)) {
+          return {
+            start: [y + 1, x + 1],
+            end: [y + 1 - (word.length - 1), x + word.length],
+          };
+        }
+
+        if (this.findWordBottomLeftToTopRight(x, y, backwardsWord)) {
+          return {
+            start: [y + 1 - (word.length - 1), x + word.length],
+            end: [y + 1, x + 1],
           };
         }
       }
@@ -102,5 +88,72 @@ export class WordSearch {
 
     // word not found.
     return undefined;
+  }
+
+  protected findWordLeftToRight(x: number, y: number, word: string): boolean {
+    if (!this.isInBounds(x + word.length - 1, y)) {
+      return false;
+    }
+
+    // check for any chars that don't match.
+    for (let i = 0; i < word.length; i += 1) {
+      if (this.grid[y][x + i] !== word.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  protected findWordTopToBottom(x: number, y: number, word: string): boolean {
+    if (!this.isInBounds(x, y + word.length - 1)) {
+      return false;
+    }
+
+    // check for any chars that don't match.
+    for (let i = 0; i < word.length; i += 1) {
+      if (this.grid[y + i][x] !== word.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  protected findWordTopLeftToBottomRight(x: number, y: number, word: string): boolean {
+    if (!this.isInBounds(x + word.length - 1, y + word.length - 1)) {
+      return false;
+    }
+
+    // check for any chars that don't match.
+    for (let i = 0; i < word.length; i += 1) {
+      if (this.grid[y + i][x + i] !== word.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  protected findWordBottomLeftToTopRight(x: number, y: number, word: string): boolean {
+    if (!this.isInBounds(x + word.length - 1, y - word.length - 1)) {
+      return false;
+    }
+
+    // check for any chars that don't match.
+    for (let i = 0; i < word.length; i += 1) {
+      if (this.grid[y - i][x + i] !== word.charAt(i)) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  protected isInBounds(x: number, y: number): boolean {
+    return x < this.grid[0].length
+        && x >= 0
+        && y < this.grid.length
+        && y >= 0;
   }
 }

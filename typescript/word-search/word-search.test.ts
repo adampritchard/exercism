@@ -373,7 +373,7 @@ describe('vertical directions', () => {
     ).toEqual(expectedResults)
   })
 
-  xit('should locate words written bottom right to top left', () => {
+  it('should locate words written bottom right to top left', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -427,7 +427,7 @@ describe('vertical directions', () => {
     ).toEqual(expectedResults)
   })
 
-  xit('should locate words written bottom left to top right', () => {
+  it('should locate words written bottom left to top right', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -486,7 +486,7 @@ describe('vertical directions', () => {
     ).toEqual(expectedResults)
   })
 
-  xit('should locate words written top right to bottom left', () => {
+  it('should locate words written top right to bottom left', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -552,7 +552,7 @@ describe('vertical directions', () => {
 })
 
 describe('avoiding false-positives', () => {
-  xit('should fail to locate a word that is not in the puzzle', () => {
+  it('should fail to locate a word that is not in the puzzle', () => {
     const grid = [
       'jefblpepre',
       'camdcimgtc',
@@ -618,7 +618,7 @@ describe('avoiding false-positives', () => {
     ).toEqual(expectedResults)
   })
 
-  xit('should fail to locate words that are not on horizontal, vertical, or diagonal lines', () => {
+  it('should fail to locate words that are not on horizontal, vertical, or diagonal lines', () => {
     const grid = ['abc', 'def']
 
     const expectedResults = {
@@ -634,7 +634,7 @@ describe('avoiding false-positives', () => {
     )
   })
 
-  xit('should not concatenate different lines to find a horizontal word', () => {
+  it('should not concatenate different lines to find a horizontal word', () => {
     const grid = ['abceli', 'xirdfg']
 
     const expectedResults = {
@@ -645,7 +645,7 @@ describe('avoiding false-positives', () => {
     expect(wordSearch.find(['elixir'])).toEqual(expectedResults)
   })
 
-  xit('should not wrap around horizontally to find a word', () => {
+  it('should not wrap around horizontally to find a word', () => {
     const grid = ['silabcdefp']
 
     const expectedResults = {
@@ -656,7 +656,7 @@ describe('avoiding false-positives', () => {
     expect(wordSearch.find(['lisp'])).toEqual(expectedResults)
   })
 
-  xit('should not wrap around vertically to find a word', () => {
+  it('should not wrap around vertically to find a word', () => {
     const grid = ['s', 'u', 'r', 'a', 'b', 'c', 't']
 
     const expectedResults = {
