@@ -91,58 +91,46 @@ export class WordSearch {
   }
 
   protected findWordLeftToRight(x: number, y: number, word: string): boolean {
-    if (!this.isInBounds(x + word.length - 1, y)) {
-      return false;
-    }
-
-    // check for any chars that don't match.
-    for (let i = 0; i < word.length; i += 1) {
-      if (this.grid[y][x + i] !== word.charAt(i)) {
-        return false;
-      }
-    }
-
-    return true;
+    const x2 = x + word.length - 1;
+    const y2 = y;
+    return this.findWordAtCoords(x, y, x2, y2, word);
   }
 
   protected findWordTopToBottom(x: number, y: number, word: string): boolean {
-    if (!this.isInBounds(x, y + word.length - 1)) {
-      return false;
-    }
-
-    // check for any chars that don't match.
-    for (let i = 0; i < word.length; i += 1) {
-      if (this.grid[y + i][x] !== word.charAt(i)) {
-        return false;
-      }
-    }
-
-    return true;
+    const x2 = x;
+    const y2 = y + word.length - 1;
+    return this.findWordAtCoords(x, y, x2, y2, word);
   }
 
   protected findWordTopLeftToBottomRight(x: number, y: number, word: string): boolean {
-    if (!this.isInBounds(x + word.length - 1, y + word.length - 1)) {
-      return false;
-    }
-
-    // check for any chars that don't match.
-    for (let i = 0; i < word.length; i += 1) {
-      if (this.grid[y + i][x + i] !== word.charAt(i)) {
-        return false;
-      }
-    }
-
-    return true;
+    const x2 = x + word.length - 1;
+    const y2 = y + word.length - 1;
+    return this.findWordAtCoords(x, y, x2, y2, word);
   }
 
   protected findWordBottomLeftToTopRight(x: number, y: number, word: string): boolean {
-    if (!this.isInBounds(x + word.length - 1, y - word.length - 1)) {
+    const x2 = x + word.length - 1;
+    const y2 = y - word.length - 1;
+    return this.findWordAtCoords(x, y, x2, y2, word);
+  }
+
+  protected findWordAtCoords(x1: number, y1: number, x2: number, y2: number, word: string): boolean {
+    if (!this.isInBounds(x1, y1) || !this.isInBounds(x2, y2)) {
       return false;
     }
 
+    const getIndex = (min: number, max: number, i: number) => {
+      if (max === min) return min;
+      if (max > min) return min + i;
+      return min - i;
+    };
+
     // check for any chars that don't match.
     for (let i = 0; i < word.length; i += 1) {
-      if (this.grid[y - i][x + i] !== word.charAt(i)) {
+      const x = getIndex(x1, x2, i);
+      const y = getIndex(y1, y2, i);
+
+      if (this.grid[y][x] !== word.charAt(i)) {
         return false;
       }
     }
