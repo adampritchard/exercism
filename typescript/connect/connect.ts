@@ -1,6 +1,5 @@
 type Coord = { x: number, y: number };
-type Piece = 'X' | 'O' | '';
-type Edge = 'bottom' | 'right';
+type Player = 'X' | 'O' | '';
 
 const directions: Coord[] = [
   { x: -1, y: -1 }, // top left
@@ -18,12 +17,14 @@ export class Board {
     this.visited = [];
   }
 
-  public winner(): Piece {
+  public winner(): Player {
+    this.visited = [];
+
     // O must connect top to bottom.
     for (let x = 0; x < this.board[0].length; x += 1) {
       const y = 0;
       if (this.board[y].charAt(x) === 'O') {
-        if (this.searchForEdge({ x, y }, 'O', 'bottom')) {
+        if (this.searchForWin({ x, y }, 'O')) {
           return 'O';
         }
       }
@@ -33,7 +34,7 @@ export class Board {
     for (let y = 0; y < this.board.length; y += 1) {
       const x = y;
       if (this.board[y].charAt(x) === 'X') {
-        if (this.searchForEdge({ x, y }, 'X', 'right')) {
+        if (this.searchForWin({ x, y }, 'X')) {
           return 'X';
         }
       }
@@ -42,39 +43,33 @@ export class Board {
     return '';
   }
 
-  searchForEdge(coord: Coord, piece: Piece, edge: Edge): boolean {
+  searchForWin(coord: Coord, player: Player): boolean {
     this.visit(coord);
 
-    if (this.isTouchingEdge(coord, edge)) {
+    // X wins if they touch the right edge.
+    if (player === 'X' && coord.x + 1 === this.board[coord.y].length) {
       return true;
-    } else {
-      for (const dir of directions) {
-        const next: Coord = {
-          x: coord.x + dir.x,
-          y: coord.y + dir.y,
-        };
+    }
 
-        if (this.canVisit(next, piece)) {
-          if (this.searchForEdge(next, piece, edge)) {
-            return true;
-          }
+    // O wins if they touch the bottom edge.
+    if (player === 'O' && coord.y + 1 === this.board.length) {
+      return true;
+    }
+
+    for (const dir of directions) {
+      const next: Coord = {
+        x: coord.x + dir.x,
+        y: coord.y + dir.y,
+      };
+
+      if (this.canVisit(next, player)) {
+        if (this.searchForWin(next, player)) {
+          return true;
         }
       }
     }
 
     return false;
-  }
-
-  isTouchingEdge(coord: Coord, edge: Edge): boolean {
-    if (edge === 'bottom') {
-      return coord.y + 1 === this.board.length;
-    }
-
-    if (edge === 'right') {
-      return coord.x + 1 === this.board[coord.y].length;
-    }
-
-    throw new Error('unreachable');
   }
 
   visit(coord: Coord) {
@@ -91,8 +86,8 @@ export class Board {
     return false;
   }
 
-  canVisit(coord: Coord, piece: Piece): boolean {
-    if (!this.board[coord.y] || this.board[coord.y][coord.x] !== piece) {
+  canVisit(coord: Coord, player: Player): boolean {
+    if (!this.board[coord.y] || this.board[coord.y][coord.x] !== player) {
       return false;
     }
 
