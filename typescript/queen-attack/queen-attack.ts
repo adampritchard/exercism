@@ -9,10 +9,9 @@ export class QueenAttack {
   public readonly black: Position;
   public readonly white: Position;
 
-  constructor({ black, white }: Partial<Positions> = {}) {
-    this.black = black || [0, 3];
-    this.white = white || [7, 3];
-
+  constructor(positions?: Partial<Positions>) {
+    this.black = positions?.black || [0, 3];
+    this.white = positions?.white || [7, 3];
     this.validate();
   }
 
@@ -32,18 +31,9 @@ export class QueenAttack {
   }
 
   toString(): string {
-    const board: string[][] = [];
-    for (let y = 0; y < 8; y += 1) {
-      board[y] = [];
-
-      for (let x = 0; x < 8; x += 1) {
-        board[y][x] = '_';
-      }
-    }
-
+    const board: string[][] = Array.from(new Array(8), () => new Array(8).fill('_'));
     board[this.black[0]][this.black[1]] = 'B';
     board[this.white[0]][this.white[1]] = 'W';
-
     return board.map(row => row.join(' ')).join('\n');
   }
 
