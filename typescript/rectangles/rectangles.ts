@@ -1,64 +1,48 @@
+type Point = {
+  x: number,
+  y: number,
+};
+
 export function count(rows: string[]): number {
-  let rectangleCount = 0;
+  const corners = findCorners(rows);
 
-  for (let y = 0; y < rows.length - 1; y += 1) {
-    for (let x = 0; x < rows[y].length; x += 1) {
-      if (rows[y].charAt(x) === '+') {
-        rectangleCount += countRectanglesFrom(x, y, rows);
-      }
-    }
-  }
-
-  return rectangleCount;
-}
-
-function countRectanglesFrom(x: number, y: number, rows: string[]): number {
   let count = 0;
-
-  // move down, looking for corners.
-  for (let y2 = y + 1; y2 < rows.length; y2 += 1) {
-    const charDown = rows[y2].charAt(x);
-    if (!isVerticalPath(charDown)) break;
-
-    // found bottom left corner.
-    if (charDown === '+') {
-      // move right, looking for corners.
-      for (let x2 = x + 1; x2 < rows[y2].length; x2 += 1) {
-        const charRight = rows[y2].charAt(x2);
-        if (!isHorizontalPath(charRight)) break;
-
-        // found bottom right corner.
-        if (charRight === '+') {
-          // check right and top sides.
-          if (isVerticalSide(y, y2, x2, rows) && isHorizontalSide(x, x2, rows[y])) {
-            count += 1;
-          }
-        }
+  for (const topLeft of corners) {
+    for (const bottomRight of corners) {
+      if (isRectangle(rows, topLeft, bottomRight)) {
+        count += 1;
       }
     }
   }
-  
   return count;
 }
 
-function isVerticalPath(char: string): boolean {
-  return char === '+' || char === '|';
+function findCorners(rows: string[]): Point[] {
+  const corners: Point[] = [];
+  for (let y = 0; y < rows.length; y += 1) {
+    for (let x = 0; x < rows[y].length; x += 1) {
+      if (rows[y][x] === '+') {
+        corners.push({ x, y });
+      }
+    }
+  }
+  return corners;
 }
 
-function isHorizontalPath(char: string): boolean {
-  return char === '+' || char === '-';
-}
-
-function isHorizontalSide(x1: number, x2: number, row: string): boolean {
-  // check corners.
-  if (row[x1] !== '+' || row[x2] !== '+') {
+function isRectangle(rows: string[], topLeft: Point, bottomRight: Point): boolean {
+  if (topLeft.x >= bottomRight.x || topLeft.y >= bottomRight.y) {
     return false;
   }
 
-  // check path between corners.
-  for (let x = x1 + 1; x < x2; x += 1) {
-    const char = row.charAt(x);
-    if (!isHorizontalPath(char)) {
+  return isVerticalSide(rows, topLeft.x, topLeft.y, bottomRight.y) // left
+      && isVerticalSide(rows, bottomRight.x, topLeft.y, bottomRight.y) // right
+      && isHorizontalSide(rows, topLeft.y, topLeft.x, bottomRight.x) // top
+      && isHorizontalSide(rows, bottomRight.y, topLeft.x, bottomRight.x); // bottom
+}
+
+function isHorizontalSide(rows: string[], y: number, x1: number, x2: number): boolean {
+  for (let x = x1; x <= x2; x += 1) {
+    if (rows[y][x] !== '+' && rows[y][x] !== '-') {
       return false;
     }
   }
@@ -66,16 +50,9 @@ function isHorizontalSide(x1: number, x2: number, row: string): boolean {
   return true;
 }
 
-function isVerticalSide(y1: number, y2: number, x: number, rows: string[]): boolean {
-  // check corners.
-  if (rows[y1].charAt(x) !== '+' || rows[y2].charAt(x) !== '+') {
-    return false;
-  }
-
-  // check path between corners.
-  for (let y = y1 + 1; y < y2; y += 1) {
-    const char = rows[y].charAt(x);
-    if (!isVerticalPath(char)) {
+function isVerticalSide(rows: string[], x: number, y1: number, y2: number): boolean {
+  for (let y = y1; y <= y2; y += 1) {
+    if (rows[y][x] !== '+' && rows[y][x] !== '|') {
       return false;
     }
   }
