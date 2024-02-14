@@ -1,235 +1,138 @@
-//
-// Delete and replace stub with your own implementation
-//
-// Inspired by "How it Works":
-// https://indepth.dev/posts/1269/finding-fine-grained-reactive-programming#how-it-works
-// https://levelup.gitconnected.com/finding-fine-grained-reactive-programming-89741994ddee?source=friends_link&sk=31c66a70c1dce7dd5f3f4229423ad127#4543
-//
-// and "Computations":
-// https://github.com/ryansolid/solid/blob/master/documentation/reactivity.md#user-content-computations
-//
+type Input = {
+  type: 'input',
+  value: number,
+  subscribers: Set<Observable>,
+};
 
-/**
- * Type for the closure's value equality predicate.
- *
- * @typeParam T - Type of the values being compared for
- *              equality.
- *
- * @remarks
- * Conceptually this function should be equivalent
- * to: `lhs === rhs`
- *
- * @param lhs   - left hand side value
- * @param rhs   - right hand side value
- * @returns     - `true` if values are considered
- *                equal; `false` otherwise.
- */
-type EqualFn<T> = (lhs: T, rhs: T) => boolean
-type GetterFn<T> = () => T
-type SetterFn<T> = (value: T) => T
-type UnsubscribeFn = () => void
-type UpdateFn<T> = (value?: T) => T
+type Computed = {
+  type: 'computed',
+  value: number,
+  equal: boolean,
+  computeFn: () => void,
+  subscribers: Set<Observable>,
+};
 
-type InputPair<T> = [GetterFn<T>, SetterFn<T>]
+type Callback = {
+  type: 'callback',
+  callbackFn: () => void,
+  subscriptions: Set<Input|Computed>,
+};
 
-type Options = {
-  name: string // for debugging
-}
+type Observable = Input | Computed | Callback;
 
-type ObserverR = {
-  name?: string
-}
+type Getter = () => number;
+type Setter = (value: number) => void;
 
-type ObserverV<T> = {
-  value?: T
-  updateFn: UpdateFn<T>
-}
 
-type Observer<T> = ObserverR & ObserverV<T>
+let ctx: Observable|undefined = undefined;
 
-type SubjectR = {
-  name?: string
-  observer: ObserverR | undefined
-}
-
-type SubjectV<T> = {
-  value: T
-  equalFn?: EqualFn<T>
-}
-
-type Subject<T> = SubjectR & SubjectV<T>
-
-// module Context value
-let activeObserver: ObserverR
-
-function updateObserver<T>(observer: Observer<T>): void {
-  const prevObserver = activeObserver
-  activeObserver = observer
-  observer.value = observer.updateFn(observer.value)
-  activeObserver = prevObserver
-}
-
-/**
- * Creates an input closure. The value is accessed
- * via the accessor and changed via the
- * mutator returned as part an `InputPair<T>`.
- *
- * @typeParam T   - Type of the closure's value.
- *                By extension the type of the return
- *                value of the accessor and the type
- *                of the mutator's single argument.
- *
- * @param value   - Input closure's initial value.
- * @param equal   - By default the current and previous
- *                values are not compared so invoking
- *                the mutator with identical values
- *                will trigger updates on any
- *                subscribers. When `true` is
- *                specified the
- *                {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality | strict equality operator}
- *                is used to compare values and
- *                mutations with unchanging values
- *                **are** suppressed.
- *                When `T` is a structural type
- *                it is necessary to provide a
- *                `(a: T, b: T) => boolean` comparison
- *                predicate instead.
- * @param options - Holder object for relevant options.
- *                Assigning a `name` to a subject can
- *                be useful during debugging.
- * @returns       - An `InputPair<T>`. The 1st
- *                element is the accessor (getter
- *                function), the 2nd element is
- *                the mutator (setter function).
- */
-function createInput<T>(
-  value: T,
-  _equal?: boolean | EqualFn<T>,
-  options?: { name?: string }
-): InputPair<T> {
-  const s: Subject<T> = {
-    name: options?.name,
-    observer: undefined,
+export function createInput(value: number): [Getter, Setter] {
+  const input: Input = {
+    type: 'input',
     value,
-    equalFn: undefined,
-  }
+    subscribers: new Set<Observable>(),
+  };
 
-  const read: GetterFn<T> = () => {
-    if (activeObserver) s.observer = activeObserver
-    return s.value
-  }
+  const getter: Getter = () => {
+    if (ctx) {
+      addSubscriber(input, ctx);
+    }
 
-  const write: SetterFn<T> = (value) => {
-    s.value = value
-    if (s.observer) updateObserver(s.observer as Observer<unknown>)
-    return s.value
-  }
+    return input.value;
+  };
+  
+  const setter: Setter = (newValue) => {
+    input.value = newValue;
+    onInputChanged(input);
+  };
 
-  return [read, write]
+  return [getter, setter];
+};
+
+export function createComputed(fn: Getter, opts?: unknown, equal: boolean = false): Getter {
+  const computed: Computed = {
+    type: 'computed',
+    value: 0,
+    equal,
+    subscribers: new Set<Observable>(),
+    computeFn: function() {
+      this.value = fn();
+    },
+  };
+
+  // init dependency chain and set initial value.
+  const prevCtx = ctx;
+  ctx = computed;
+  computed.computeFn();
+  ctx = prevCtx;
+
+  return () => {
+    if (ctx) {
+      addSubscriber(computed, ctx);
+    }
+
+    return computed.value;
+  };
 }
 
-/**
- * Creates a computed (derived) closure with the
- * supplied function which computes the current value
- * of the closure.
- *
- * @privateRemarks
- * `Observer<T>` may be good enough to get through
- * the enabled test case but more is needed to
- * get further ...
- *
- * @typeParam T   - Type of the closure's value.
- *                By extension the type of the value
- *                returned by the update function and
- *                of the value
- *                accepted by the function.
- *
- * @param updateFn - Update function. This function
- *                 references one or more accessors of
- *                 other subjects. It **should not**
- *                 perform side effects. It is expected
- *                 to return a value which will be the
- *                 value of the closure until the next
- *                 update. The closure's value is
- *                 supplied to this update function
- *                 on the next update.
- * @param value    - Initial value that is passed to
- *                 `updateFn` when it executes for the
- *                 first time.
- * @param equal    - By default the current and previous
- *                 values are not compared so updates
- *                 will be triggered even if the value
- *                 doesn't _change_. When `true` is
- *                 specified the
- *                 {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Strict_equality | strict equality operator}
- *                 is used to compare values and updates
- *                 with identical values **are**
- *                 suppressed. When `T` is a structural
- *                 type it is necessary to provide a
- *                 `(a: T, b: T) => boolean` comparison
- *                 predicate instead.
- * @param options  - Holder object for relevant options.
- *                 Assigning a `name` to a subject can
- *                 be useful during debugging.
- * @returns        - The accessor to the closure's
- *                 value (getter function). Retrieves
- *                 the closure's current value. Used by
- *                 observers (or more accurately their
- *                 update function) to obtain the
- *                 value (and to subscribe for
- *                 updates).
- */
-function createComputed<T>(
-  updateFn: UpdateFn<T>,
-  value?: T,
-  _equal?: boolean | EqualFn<T>,
-  options?: { name?: string }
-): GetterFn<T> {
-  const o: Observer<T> = {
-    name: options?.name,
-    value,
-    updateFn,
+export function createCallback(fn: () => void): () => void {
+  const callback: Callback = {
+    type: 'callback',
+    callbackFn: fn,
+    subscriptions: new Set<Input|Computed>(),
+  };
+
+  // init dependency chain.
+  const prevCtx = ctx;
+  ctx = callback;
+  callback.callbackFn();
+  ctx = prevCtx;
+
+  // unsubscribe fn.
+  return () => {
+    for (const obs of callback.subscriptions) {
+      obs.subscribers.delete(callback);
+    }
+  };
+}
+
+function addSubscriber(obs: Input|Computed, sub: Observable) {
+  obs.subscribers.add(sub);
+
+  if (sub.type === 'callback') {
+    sub.subscriptions.add(obs);
   }
-  updateObserver(o)
-  return (): T => o.value!
 }
 
-/**
- * Creates a callback closure with the supplied
- * function which is expected to perform side effects.
- *
- * @privateRemarks
- * `observer` isn't mean't to be an empty object literal.
- * Replace it with something more appropriate to its
- * purpose.
- *
- * @typeParam T    - Type of the closure's value.
- *                 By extension the type of the value
- *                 returned by the callback function
- *                 and of the value accepted by the
- *                 function.
- *
- * @param updateFn - Callback function. This function
- *                 references one or more accessors of
- *                 subjects. It may perform side effects.
- *                 It will also be passed the
- *                 value that it returned the last time it
- *                 was invoked.
- * @param value    - Initial value that is passed to
- *                 `updateFn` when it executes for
- *                  the first time.
- * @returns        - The `unsubscribe` function. Once
- *                 invoked the callback closure will
- *                 stop receiving updates from the
- *                 subjects it subscribed to.
- */
-function createCallback<T>(_updateFn: UpdateFn<T>, _value?: T): UnsubscribeFn {
-  const observer = {}
-  return ((observer: unknown | undefined) => (): void => {
-    if (!observer) return
-    observer = undefined
-    // i.e. dispose of any active subscriptions
-  })(observer)
+function onInputChanged(input: Input) {
+  const needsCallback = new Set<Callback>();
+  triggerUpdates(input.subscribers, needsCallback);
+
+  for (const callback of needsCallback) {
+    callback.callbackFn();
+  }
 }
 
-export { createInput, createComputed, createCallback }
+function triggerUpdates(toUpdate: Set<Observable>, needsCallback: Set<Callback>) {
+  const nextUpdate = new Set<Observable>();
+
+  for (const obs of toUpdate) {
+    if (obs.type === 'computed') {
+      const prev = obs.value;
+      obs.computeFn();
+      if (!obs.equal || prev !== obs.value) {
+        for (const sub of obs.subscribers) {
+          nextUpdate.add(sub);
+        }
+      }
+    }
+
+    if (obs.type === 'callback') {
+      needsCallback.add(obs);
+    }
+  }
+
+  if (nextUpdate.size) {
+    triggerUpdates(nextUpdate, needsCallback);
+  }
+}
