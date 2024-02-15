@@ -16,13 +16,7 @@ export class CustomSet {
   }
 
   contains(element: number): boolean {
-    for (const val of this.values) {
-      if (val === element) {
-        return true;
-      }
-    }
-
-    return false;
+    return this.values.indexOf(element) !== -1;
   }
 
   add(element: number): CustomSet {
@@ -34,23 +28,11 @@ export class CustomSet {
   }
 
   subset(other: CustomSet): boolean {
-    for (const val of this.values) {
-      if (!other.contains(val)) {
-        return false;
-      }
-    }
-
-    return true;
+    return this.values.every(val => other.contains(val));
   }
 
   disjoint(other: CustomSet): boolean {
-    for (const val of this.values) {
-      if (other.contains(val)) {
-        return false;
-      }
-    }
-
-    return true;
+    return !this.values.some(val => other.contains(val));
   }
 
   eql(other: CustomSet): boolean {
@@ -58,40 +40,21 @@ export class CustomSet {
       return false;
     }
 
-    for (const val of this.values) {
-      if (!other.contains(val)) {
-        return false;
-      }
-    }
-
-    return true;
+    return this.subset(other);
   }
 
   union(other: CustomSet): CustomSet {
-    return new CustomSet([...this.values, ...other.values]);
+    const vals = [...this.values, ...other.values];
+    return new CustomSet(vals);
   }
 
   intersection(other: CustomSet): CustomSet {
-    const set = new CustomSet();
-
-    for (const val of this.values) {
-      if (other.contains(val)) {
-        set.add(val);
-      }
-    }
-
-    return set;
+    const vals = this.values.filter(val => other.contains(val));
+    return new CustomSet(vals);
   }
 
   difference(other: CustomSet): CustomSet {
-    const set = new CustomSet();
-    
-    for (const val of this.values) {
-      if (!other.contains(val)) {
-        set.add(val);
-      }
-    }
-
-    return set;
+    const vals = this.values.filter(val => !other.contains(val));
+    return new CustomSet(vals);
   }
 }
