@@ -7,9 +7,10 @@ export class Crypto {
     const cleanText = this.plainText
       .toLowerCase()
       .replaceAll(/[^\w0-9]/g, '');
+    
+    const rowCount = Math.ceil(Math.sqrt(cleanText.length));
+    const colCount = Math.ceil(cleanText.length / rowCount);
 
-    const colCount = this.getColCount(cleanText.length);
-    const rowCount = Math.ceil(cleanText.length / colCount);
     const square: string[][] = Array.from({ length: rowCount }, () => []);
 
     let i = 0;
@@ -23,26 +24,5 @@ export class Crypto {
     return square
       .map(arr => arr.join(''))
       .join(' ');
-  }
-
-  public getColCount(length: number) {
-    const targetRowCount = Math.ceil(Math.sqrt(length));
-
-    let colCount = 1;
-
-    for (let i = 2; i < length; i += 1) {
-      const rowCount = Math.ceil(length / i);
-
-      if (rowCount === targetRowCount) {
-        colCount = i;
-        break;
-      } else if (rowCount > targetRowCount) {
-        colCount = i;
-      } else {
-        break;
-      }
-    }
-
-    return colCount;
   }
 }
