@@ -13,11 +13,21 @@ class Robot(
     }
 
     private fun rotateLeft() {
-        orientation = orientation.rotatedCounterClockwise()
+        orientation = when (orientation) {
+            Orientation.NORTH -> Orientation.WEST
+            Orientation.EAST -> Orientation.NORTH
+            Orientation.SOUTH -> Orientation.EAST
+            Orientation.WEST -> Orientation.SOUTH
+        }
     }
 
     private fun rotateRight() {
-        orientation = orientation.rotatedClockwise()
+        orientation = when (orientation) {
+            Orientation.NORTH -> Orientation.EAST
+            Orientation.EAST -> Orientation.SOUTH
+            Orientation.SOUTH -> Orientation.WEST
+            Orientation.WEST -> Orientation.NORTH
+        }
     }
 
     private fun advance() {
