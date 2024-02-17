@@ -1,5 +1,5 @@
-import kotlin.math.floor
 import kotlin.random.Random
+import kotlin.random.nextInt
 
 class DndCharacter {
     val strength: Int = ability()
@@ -11,26 +11,15 @@ class DndCharacter {
     val hitpoints = 10 + modifier(constitution)
 
     companion object {
-        fun diceRoll() = Random.nextInt(from = 1, until = 7)
+        fun diceRoll() = Random.nextInt(1..6)
 
         fun ability(): Int {
-            val rolls = mutableListOf<Int>(
-                diceRoll(),
-                diceRoll(),
-                diceRoll(),
-                diceRoll(),
-            )
+            val rolls = MutableList(4) { diceRoll() }
             rolls.sort()
             rolls.removeAt(0)
             return rolls.sum()
         }
 
-        fun modifier(score: Int): Int {
-            val mod = (score - 10) / 2.0
-            return when {
-                mod < 0 -> floor(mod).toInt()
-                else -> mod.toInt()
-            }
-        }
+        fun modifier(score: Int) = Math.floorDiv(score - 10, 2)
     }
 }
