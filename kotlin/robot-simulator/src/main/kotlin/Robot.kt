@@ -3,8 +3,8 @@ class Robot(
     var orientation: Orientation = Orientation.NORTH,
 ) {
     fun simulate(instructions: String) {
-        for (instruction in instructions) {
-            when (instruction) {
+        instructions.forEach {
+            when (it) {
                 'L' -> rotateLeft()
                 'R' -> rotateRight()
                 'A' -> advance()
@@ -31,11 +31,13 @@ class Robot(
     }
 
     private fun advance() {
-        gridPosition = when (orientation) {
-            Orientation.NORTH -> GridPosition(gridPosition.x, gridPosition.y + 1)
-            Orientation.EAST -> GridPosition(gridPosition.x + 1, gridPosition.y)
-            Orientation.SOUTH -> GridPosition(gridPosition.x, gridPosition.y - 1)
-            Orientation.WEST -> GridPosition(gridPosition.x - 1, gridPosition.y)
+        gridPosition = with (gridPosition) {
+            when (orientation) {
+                Orientation.NORTH -> GridPosition(x, y + 1)
+                Orientation.EAST -> GridPosition(x + 1, y)
+                Orientation.SOUTH -> GridPosition(x, y - 1)
+                Orientation.WEST -> GridPosition(x - 1, y)
+            }
         }
     }
 }
