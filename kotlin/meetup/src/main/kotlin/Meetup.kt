@@ -1,24 +1,18 @@
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.temporal.TemporalAdjusters as Adj
+import java.time.temporal.TemporalAdjusters as Cal
 
 class Meetup(val month: Int, val  year: Int) {
     fun day(dayOfWeek: DayOfWeek, schedule: MeetupSchedule): LocalDate {
         val date = LocalDate.of(year, month, 1)
 
         return when (schedule) {
-            MeetupSchedule.FIRST -> date.with(Adj.firstInMonth(dayOfWeek))
-            MeetupSchedule.SECOND -> date.with(Adj.dayOfWeekInMonth(2, dayOfWeek))
-            MeetupSchedule.THIRD -> date.with(Adj.dayOfWeekInMonth(3, dayOfWeek))
-            MeetupSchedule.FOURTH -> date.with(Adj.dayOfWeekInMonth(4, dayOfWeek))
-            MeetupSchedule.LAST -> date.with(Adj.lastInMonth(dayOfWeek))
-            MeetupSchedule.TEENTH -> {
-                var result = date.with(Adj.firstInMonth(dayOfWeek))
-                while (result.dayOfMonth < 13) {
-                    result = result.with(Adj.next(dayOfWeek))
-                }
-                result
-            }
+            MeetupSchedule.FIRST -> date.with(Cal.firstInMonth(dayOfWeek))
+            MeetupSchedule.SECOND -> date.with(Cal.dayOfWeekInMonth(2, dayOfWeek))
+            MeetupSchedule.THIRD -> date.with(Cal.dayOfWeekInMonth(3, dayOfWeek))
+            MeetupSchedule.FOURTH -> date.with(Cal.dayOfWeekInMonth(4, dayOfWeek))
+            MeetupSchedule.LAST -> date.with(Cal.lastInMonth(dayOfWeek))
+            MeetupSchedule.TEENTH -> date.plusDays(11).with(Cal.next(dayOfWeek))
         }
     }
 }
