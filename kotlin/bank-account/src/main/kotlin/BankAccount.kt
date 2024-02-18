@@ -1,27 +1,24 @@
-import java.util.concurrent.atomic.AtomicLong
-
 class BankAccount {
-    val balance: Long
+    var balance: Long = 0
         get() {
             assertAccountOpen()
-            return _balance.get()
+            return field
         }
+        private set
 
-    private var _balance = AtomicLong(0)
-    private var isClosed = false
+    private var isOpen = true
 
+    @Synchronized
     fun adjustBalance(amount: Long) {
         assertAccountOpen()
-        _balance.addAndGet(amount)
+        balance += amount
     }
 
     fun close() {
-        isClosed = true
+        isOpen = false
     }
 
     private fun assertAccountOpen() {
-        if (isClosed) {
-            throw IllegalStateException()
-        }
+        if (!isOpen) throw IllegalStateException()
     }
 }
