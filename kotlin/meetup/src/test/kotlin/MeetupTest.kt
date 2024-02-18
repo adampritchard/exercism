@@ -13,7 +13,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testMonteenthOfAugust2013() {
         val expected = LocalDate.of(2013, 8, 19)
@@ -21,7 +20,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testMonteenthOfSeptember2013() {
         val expected = LocalDate.of(2013, 9, 16)
@@ -29,7 +27,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testTuesteenthOfMarch2013() {
         val expected = LocalDate.of(2013, 3, 19)
@@ -37,7 +34,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testTuesteenthOfApril2013() {
         val expected = LocalDate.of(2013, 4, 16)
@@ -45,7 +41,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testTuesteenthOfAugust2013() {
         val expected = LocalDate.of(2013, 8, 13)
@@ -53,7 +48,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testWednesteenthOfJanuary2013() {
         val expected = LocalDate.of(2013, 1, 16)
@@ -61,7 +55,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.WEDNESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testWednesteenthOfFebruary2013() {
         val expected = LocalDate.of(2013, 2, 13)
@@ -69,7 +62,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.WEDNESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testWednesteenthOfJune2013() {
         val expected = LocalDate.of(2013, 6, 19)
@@ -77,7 +69,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.WEDNESDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testThursteenthOfMay2013() {
         val expected = LocalDate.of(2013, 5, 16)
@@ -85,7 +76,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.THURSDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testThursteenthOfJune2013() {
         val expected = LocalDate.of(2013, 6, 13)
@@ -93,7 +83,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.THURSDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testThursteenthOfSeptember2013() {
         val expected = LocalDate.of(2013, 9, 19)
@@ -101,7 +90,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.THURSDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testFriteenthOfApril2013() {
         val expected = LocalDate.of(2013, 4, 19)
@@ -109,7 +97,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.FRIDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testFriteenthOfAugust2013() {
         val expected = LocalDate.of(2013, 8, 16)
@@ -117,7 +104,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.FRIDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testFriteenthOfSeptember2013() {
         val expected = LocalDate.of(2013, 9, 13)
@@ -173,7 +159,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SUNDAY, MeetupSchedule.TEENTH))
     }
 
-    @Ignore
     @Test
     fun testFirstMondayOfMarch2013() {
         val expected = LocalDate.of(2013, 3, 4)
@@ -181,7 +166,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.FIRST))
     }
 
-    @Ignore
     @Test
     fun testFirstMondayOfApril2013() {
         val expected = LocalDate.of(2013, 4, 1)
@@ -189,7 +173,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.FIRST))
     }
 
-    @Ignore
     @Test
     fun testFirstTuesdayOfMay2013() {
         val expected = LocalDate.of(2013, 5, 7)
@@ -197,7 +180,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.FIRST))
     }
 
-    @Ignore
     @Test
     fun testFirstTuesdayOfJune2013() {
         val expected = LocalDate.of(2013, 6, 4)
@@ -205,7 +187,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.FIRST))
     }
 
-    @Ignore
     @Test
     fun testFirstWednesdayOfJuly2013() {
         val expected = LocalDate.of(2013, 7, 3)
@@ -381,7 +362,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SATURDAY, MeetupSchedule.SECOND))
     }
 
-    @Ignore
     @Test
     fun testSecondSundayOfMarch2013() {
         val expected = LocalDate.of(2013, 3, 10)
@@ -453,7 +433,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.THURSDAY, MeetupSchedule.THIRD))
     }
 
-    @Ignore
     @Test
     fun testThirdThursdayOfOctober2013() {
         val expected = LocalDate.of(2013, 10, 17)
@@ -477,7 +456,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.FRIDAY, MeetupSchedule.THIRD))
     }
 
-    @Ignore
     @Test
     fun testThirdSaturdayOfJanuary2013() {
         val expected = LocalDate.of(2013, 1, 19)
@@ -485,7 +463,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SATURDAY, MeetupSchedule.THIRD))
     }
 
-    @Ignore
     @Test
     fun testThirdSaturdayOfFebruary2013() {
         val expected = LocalDate.of(2013, 2, 16)
@@ -501,7 +478,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SUNDAY, MeetupSchedule.THIRD))
     }
 
-    @Ignore
     @Test
     fun testThirdSundayOfApril2013() {
         val expected = LocalDate.of(2013, 4, 21)
@@ -533,7 +509,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.TUESDAY, MeetupSchedule.FOURTH))
     }
 
-    @Ignore
     @Test
     fun testFourthTuesdayOfJune2013() {
         val expected = LocalDate.of(2013, 6, 25)
@@ -557,7 +532,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.WEDNESDAY, MeetupSchedule.FOURTH))
     }
 
-    @Ignore
     @Test
     fun testFourthThursdayOfSeptember2013() {
         val expected = LocalDate.of(2013, 9, 26)
@@ -589,7 +563,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.FRIDAY, MeetupSchedule.FOURTH))
     }
 
-    @Ignore
     @Test
     fun testFourthSaturdayOfJanuary2013() {
         val expected = LocalDate.of(2013, 1, 26)
@@ -621,7 +594,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SUNDAY, MeetupSchedule.FOURTH))
     }
 
-    @Ignore
     @Test
     fun testLastMondayOfMarch2013() {
         val expected = LocalDate.of(2013, 3, 25)
@@ -637,7 +609,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.MONDAY, MeetupSchedule.LAST))
     }
 
-    @Ignore
     @Test
     fun testLastTuesdayOfMay2013() {
         val expected = LocalDate.of(2013, 5, 28)
@@ -661,7 +632,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.WEDNESDAY, MeetupSchedule.LAST))
     }
 
-    @Ignore
     @Test
     fun testLastWednesdayOfAugust2013() {
         val expected = LocalDate.of(2013, 8, 28)
@@ -693,7 +663,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.FRIDAY, MeetupSchedule.LAST))
     }
 
-    @Ignore
     @Test
     fun testLastFridayOfDecember2013() {
         val expected = LocalDate.of(2013, 12, 27)
@@ -725,7 +694,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SUNDAY, MeetupSchedule.LAST))
     }
 
-    @Ignore
     @Test
     fun testLastSundayOfApril2013() {
         val expected = LocalDate.of(2013, 4, 28)
@@ -757,7 +725,6 @@ class MeetupTest {
         assertEquals(expected, meetup.day(DayOfWeek.SUNDAY, MeetupSchedule.LAST))
     }
 
-    @Ignore
     @Test
     fun testFirstFridayOfDecember2012() {
         val expected = LocalDate.of(2012, 12, 7)
