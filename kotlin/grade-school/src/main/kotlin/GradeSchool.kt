@@ -1,14 +1,23 @@
 class School {
+    val students: MutableMap<String, Int> = mutableMapOf()
 
     fun add(student: String, grade: Int) {
-        TODO("Implement this function to complete the task")
+        students[student] = grade
     }
 
     fun grade(grade: Int): List<String> {
-        TODO("Implement this function to complete the task")
+        return students
+            .filter { (_, g) -> g == grade }
+            .keys.sorted()
     }
 
     fun roster(): List<String> {
-        TODO("Implement this function to complete the task")
+        return students
+            .toList()
+            .sortedWith(compareBy(
+                { (_, grade) -> grade },
+                { (name, _) -> name })
+            )
+            .map { (name, _) -> name }
     }
 }
