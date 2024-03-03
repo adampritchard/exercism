@@ -1,23 +1,19 @@
+import java.util.SortedMap
+
 class School {
-    val students: MutableMap<String, Int> = mutableMapOf()
+    val grades: SortedMap<Int, MutableList<String>> = sortedMapOf()
 
     fun add(student: String, grade: Int) {
-        students[student] = grade
+        val students = grades.getOrPut(grade) { mutableListOf() }
+        students.add(student)
+        students.sort()
     }
 
     fun grade(grade: Int): List<String> {
-        return students
-            .filter { (_, g) -> g == grade }
-            .keys.sorted()
+        return grades.getOrDefault(grade, emptyList())
     }
 
     fun roster(): List<String> {
-        return students
-            .toList()
-            .sortedWith(compareBy(
-                { (_, grade) -> grade },
-                { (name, _) -> name })
-            )
-            .map { (name, _) -> name }
+        return grades.values.flatten()
     }
 }
